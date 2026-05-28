@@ -34,6 +34,7 @@ import { buildAnalysisUrl, buildLichessAnalysisUrl, siteLabel } from "../shared/
 
 type EditState = {
   id: string;
+  title: string;
   notes: string;
   tags: string;
 };
@@ -181,6 +182,7 @@ export function LibraryPage() {
 
     await updateBookmark(editing.id, {
       userContent: {
+        title: editing.title.trim(),
         notes: editing.notes.trim() || undefined,
         tags: parseTags(editing.tags)
       }
@@ -451,6 +453,13 @@ export function LibraryPage() {
                   {isEditing ? (
                     <div className="edit-form">
                       <label>
+                        Title
+                        <input
+                          value={editing.title}
+                          onChange={(event) => setEditing({ ...editing, title: event.target.value })}
+                        />
+                      </label>
+                      <label>
                         Notes
                         <textarea
                           value={editing.notes}
@@ -519,6 +528,7 @@ export function LibraryPage() {
                       onClick={() =>
                         setEditing({
                           id: bookmark.id,
+                          title: getBookmarkDisplayTitle(bookmark),
                           notes: bookmark.userContent.notes ?? "",
                           tags: tagsToInputValue(bookmark.userContent.tags)
                         })
@@ -565,6 +575,13 @@ export function LibraryPage() {
 
                   {isEditing ? (
                     <div className="edit-form">
+                      <label>
+                        Title
+                        <input
+                          value={editing.title}
+                          onChange={(event) => setEditing({ ...editing, title: event.target.value })}
+                        />
+                      </label>
                       <label>
                         Notes
                         <textarea
@@ -635,6 +652,7 @@ export function LibraryPage() {
                     onClick={() =>
                       setEditing({
                         id: bookmark.id,
+                        title: getBookmarkDisplayTitle(bookmark),
                         notes: bookmark.userContent.notes ?? "",
                         tags: tagsToInputValue(bookmark.userContent.tags)
                       })
