@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ChessMark app icon</title>
+  <desc id="desc">A simplified chessboard with a yellow bookmark ribbon on a dark navy tile.</desc>
+  <rect width="128" height="128" rx="28" fill="#0F172A"/>
+  <rect x="19" y="22" width="75" height="75" rx="9" fill="#F8FAFC"/>
+  <rect x="25" y="28" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="41" y="28" width="16" height="16" fill="#64748B"/>
+  <rect x="57" y="28" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="73" y="28" width="16" height="16" fill="#64748B"/>
+  <rect x="25" y="44" width="16" height="16" fill="#64748B"/>
+  <rect x="41" y="44" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="57" y="44" width="16" height="16" fill="#64748B"/>
+  <rect x="73" y="44" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="25" y="60" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="41" y="60" width="16" height="16" fill="#64748B"/>
+  <rect x="57" y="60" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="73" y="60" width="16" height="16" fill="#64748B"/>
+  <rect x="25" y="76" width="16" height="16" fill="#64748B"/>
+  <rect x="41" y="76" width="16" height="16" fill="#E2E8F0"/>
+  <rect x="57" y="76" width="16" height="16" fill="#64748B"/>
+  <rect x="73" y="76" width="16" height="16" fill="#E2E8F0"/>
+  <path d="M82 18H108C111.314 18 114 20.6863 114 24V110L95 97L76 110V24C76 20.6863 78.6863 18 82 18Z" fill="#FACC15"/>
+  <path d="M76 78L95 65L114 78V110L95 97L76 110V78Z" fill="#EAB308" opacity="0.55"/>
+  <path d="M90 35H100V45H110V55H100V65H90V55H80V45H90V35Z" fill="#111827" opacity="0.9"/>
+  <rect x="19" y="22" width="75" height="75" rx="9" stroke="#111827" stroke-width="4"/>
+</svg>
