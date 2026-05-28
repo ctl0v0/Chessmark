@@ -6,6 +6,7 @@ import {
   LayoutGrid,
   Pencil,
   Plus,
+  RefreshCw,
   Rows3,
   Search,
   SlidersHorizontal,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getBookmarkDisplayTitle } from "../shared/bookmarkDisplay";
+import { BOOKMARKS_STORAGE_KEY, TAG_PRESETS_STORAGE_KEY } from "../shared/constants";
 import {
   addTagPresets,
   clearBookmarks,
@@ -51,11 +53,47 @@ export function LibraryPage() {
   const [newPresetTags, setNewPresetTags] = useState("");
   const [editing, setEditing] = useState<EditState>();
   const [notice, setNotice] = useState<string>();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     refreshData().catch((error) => {
       setNotice(error instanceof Error ? error.message : "Could not load bookmarks.");
     });
+  }, []);
+
+  useEffect(() => {
+    const refreshSilently = () => {
+      refreshData().catch((error) => {
+        setNotice(error instanceof Error ? error.message : "Could not refresh bookmarks.");
+      });
+    };
+
+    const handleFocus = () => refreshSilently();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        refreshSilently();
+      }
+    };
+    const handleStorageChange = (
+      changes: Record<string, chrome.storage.StorageChange>,
+      areaName: chrome.storage.AreaName
+    ) => {
+      if (areaName !== "local" || (!changes[BOOKMARKS_STORAGE_KEY] && !changes[TAG_PRESETS_STORAGE_KEY])) {
+        return;
+      }
+
+      refreshSilently();
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    chrome.storage.onChanged.addListener(handleStorageChange);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
   }, []);
 
   const allTags = useMemo(() => {
@@ -101,9 +139,14 @@ export function LibraryPage() {
   }, [bookmarks, searchQuery, selectedTag, sortOrder]);
 
   async function refreshData() {
-    const [storedBookmarks, storedTagPresets] = await Promise.all([getBookmarks(), getTagPresets()]);
-    setBookmarks(storedBookmarks);
-    setTagPresets(storedTagPresets);
+    setIsRefreshing(true);
+    try {
+      const [storedBookmarks, storedTagPresets] = await Promise.all([getBookmarks(), getTagPresets()]);
+      setBookmarks(storedBookmarks);
+      setTagPresets(storedTagPresets);
+    } finally {
+      setIsRefreshing(false);
+    }
   }
 
   async function refreshBookmarks() {
@@ -187,6 +230,15 @@ export function LibraryPage() {
     setNotice("All bookmarks deleted.");
   }
 
+  async function handleManualRefresh() {
+    try {
+      await refreshData();
+      setNotice("Library refreshed.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Could not refresh bookmarks.");
+    }
+  }
+
   function openUrl(url: string) {
     chrome.tabs.create({ url }).catch(() => {
       window.open(url, "_blank", "noopener,noreferrer");
@@ -254,6 +306,15 @@ export function LibraryPage() {
           </div>
         </div>
         <div className="header-actions">
+          <button
+            className="refresh-button"
+            type="button"
+            onClick={handleManualRefresh}
+            title="Refresh library"
+            aria-label="Refresh library"
+          >
+            <RefreshCw className={isRefreshing ? "spin" : undefined} size={17} aria-hidden="true" />
+          </button>
           <button type="button" onClick={handleExportJson}>
             <FileJson size={17} aria-hidden="true" />
             JSON

@@ -123,6 +123,21 @@ button:disabled {
   color: #8e3f2d;
 }
 
+.refresh-button {
+  width: 38px;
+  padding: 0;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .toolbar {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) 190px 170px auto;
