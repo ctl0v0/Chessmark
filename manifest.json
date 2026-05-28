@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChessMark",
   "short_name": "ChessMark",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Save Chess.com and Lichess board positions, notes, tags, screenshots, and FEN for later study.",
   "icons": {
     "16": "assets/icons/icon_16.png",
