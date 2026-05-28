@@ -314,7 +314,9 @@ button:disabled {
 .row-board-missing {
   display: block;
   width: 184px;
+  height: 184px;
   aspect-ratio: 1 / 1;
+  align-self: start;
   object-fit: cover;
   border-radius: 8px;
   background: #edf1f4;
@@ -541,6 +543,16 @@ button:disabled {
   outline: none;
 }
 
+.bookmark-row .edit-form {
+  max-width: 820px;
+}
+
+.bookmark-row .edit-form textarea {
+  min-height: 66px;
+  max-height: 96px;
+  resize: vertical;
+}
+
 .edit-form input {
   min-height: 38px;
 }
@@ -616,6 +628,7 @@ button:disabled {
   .row-board-image,
   .row-board-missing {
     width: 132px;
+    height: 132px;
   }
 
   .row-actions {

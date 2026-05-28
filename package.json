@@ -1,6 +1,6 @@
 {
   "name": "chessmark",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "description": "A local-first Chrome extension for bookmarking Chess.com and Lichess positions.",

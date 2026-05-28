@@ -5,7 +5,7 @@ Use this file as the copy/paste source for the first public MVP submission.
 ## Upload Package
 
 - Run `npm run package`.
-- Upload `release/chessmark-0.1.1.zip`.
+- Upload `release/chessmark-0.1.2.zip`.
 - The ZIP must contain `manifest.json` at the root.
 - Load `dist` unpacked in Chrome before submission and test the full save/library/export flow.
 
