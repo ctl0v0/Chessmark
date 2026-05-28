@@ -20,6 +20,20 @@ ChessMark is a bookmarking tool, not a chess engine. It does not provide evaluat
 - Stores all bookmarks locally in the browser.
 - Provides a full library page for searching, filtering, sorting, editing, opening, copying, deleting, and exporting bookmarks.
 
+## Screenshots
+
+### Board Detection
+
+<img src="assets/store/screenshot_popup_detected_1280x800.png" alt="ChessMark popup detecting a chess board" width="720">
+
+### Saved Position
+
+<img src="assets/store/screenshot_popup_saved_1280x800.png" alt="ChessMark popup after saving a position" width="720">
+
+### Library Management
+
+<img src="assets/store/screenshot_library_1280x800.png" alt="ChessMark library with saved chess positions" width="720">
+
 ## Supported Sites
 
 ChessMark currently supports:
