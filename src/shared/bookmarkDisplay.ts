@@ -1,4 +1,4 @@
-import type { PositionBookmark, Site } from "./types";
+import type { GameMetadata, PositionBookmark, Site } from "./types";
 import { siteLabel } from "./urls";
 
 const GENERIC_TITLE_PATTERNS = [
@@ -14,7 +14,7 @@ export function buildBookmarkTitle(input: {
   site: Site;
   notes?: string;
   tags: string[];
-  metadata?: Record<string, string>;
+  metadata?: GameMetadata;
   pageTitle?: string;
   fen?: string;
 }): string {
@@ -65,7 +65,7 @@ function firstUsefulSentence(notes?: string): string | undefined {
   return trimmed.split(/\r?\n|(?<=[.!?])\s+/)[0]?.slice(0, 80);
 }
 
-function buildPlayersTitle(metadata?: Record<string, string>): string | undefined {
+function buildPlayersTitle(metadata?: GameMetadata): string | undefined {
   const white = metadata?.white?.trim();
   const black = metadata?.black?.trim();
 

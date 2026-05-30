@@ -6,6 +6,28 @@ export type CaptureMethod = "fen-direct" | "dom-reconstruction" | "screenshot-on
 
 export type CaptureConfidence = "high" | "medium" | "low";
 
+export type PlayerColor = "white" | "black";
+
+export type TimeClass = "bullet" | "blitz" | "rapid" | "classical" | "correspondence" | "unknown";
+
+export type GameMetadata = {
+  pageTitle?: string;
+  gameId?: string;
+  white?: string;
+  black?: string;
+  whiteRating?: number;
+  blackRating?: number;
+  myColor?: PlayerColor;
+  myRating?: number;
+  opponentRating?: number;
+  timeControl?: string;
+  initialClockSeconds?: number;
+  incrementSeconds?: number;
+  timeClass?: TimeClass;
+  result?: string;
+  moveText?: string;
+};
+
 export type DOMRectLike = {
   x: number;
   y: number;
@@ -37,7 +59,7 @@ export type CapturedPosition = {
   orientation?: BoardOrientation;
   captureMethod: CaptureMethod;
   boardRect?: DOMRectLike;
-  metadata?: Record<string, string>;
+  metadata?: GameMetadata;
   detection: BoardDetectionResult;
 };
 
@@ -70,14 +92,7 @@ export type PositionBookmark = {
     height?: number;
   };
 
-  game?: {
-    white?: string;
-    black?: string;
-    timeControl?: string;
-    result?: string;
-    gameId?: string;
-    moveText?: string;
-  };
+  game?: GameMetadata;
 
   userContent: {
     title?: string;

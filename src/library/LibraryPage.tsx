@@ -1,8 +1,10 @@
 import {
+  Calendar,
   Clipboard,
   Download,
   ExternalLink,
   FileJson,
+  Gauge,
   LayoutGrid,
   Pencil,
   Plus,
@@ -48,6 +50,12 @@ export function LibraryPage() {
   const [bookmarks, setBookmarks] = useState<PositionBookmark[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [myRatingMin, setMyRatingMin] = useState("");
+  const [myRatingMax, setMyRatingMax] = useState("");
+  const [opponentRatingMin, setOpponentRatingMin] = useState("");
+  const [opponentRatingMax, setOpponentRatingMax] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [tagPresets, setTagPresets] = useState<string[]>([]);
@@ -112,11 +120,23 @@ export function LibraryPage() {
           return false;
         }
 
+        if (!isWithinDateRange(bookmark.createdAt, dateFrom, dateTo)) {
+          return false;
+        }
+
+        if (!isWithinRatingRange(bookmark.game?.myRating, myRatingMin, myRatingMax)) {
+          return false;
+        }
+
+        if (!isWithinRatingRange(bookmark.game?.opponentRating, opponentRatingMin, opponentRatingMax)) {
+          return false;
+        }
+
         if (!query) {
           return true;
         }
 
-        const searchable = [
+        const searchable = stringifySearchValues([
           getBookmarkDisplayTitle(bookmark),
           bookmark.userContent.notes,
           bookmark.userContent.tags.join(" "),
@@ -124,11 +144,14 @@ export function LibraryPage() {
           bookmark.source.url,
           bookmark.source.pageTitle,
           bookmark.game?.white,
-          bookmark.game?.black
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
+          bookmark.game?.black,
+          bookmark.game?.timeControl,
+          bookmark.game?.timeClass,
+          bookmark.game?.whiteRating,
+          bookmark.game?.blackRating,
+          bookmark.game?.myRating,
+          bookmark.game?.opponentRating
+        ]);
 
         return searchable.includes(query);
       })
@@ -137,7 +160,22 @@ export function LibraryPage() {
         const bTime = new Date(b.createdAt).getTime();
         return sortOrder === "newest" ? bTime - aTime : aTime - bTime;
       });
-  }, [bookmarks, searchQuery, selectedTag, sortOrder]);
+  }, [
+    bookmarks,
+    dateFrom,
+    dateTo,
+    myRatingMax,
+    myRatingMin,
+    opponentRatingMax,
+    opponentRatingMin,
+    searchQuery,
+    selectedTag,
+    sortOrder
+  ]);
+
+  const hasAdvancedFilters = Boolean(
+    dateFrom || dateTo || myRatingMin || myRatingMax || opponentRatingMin || opponentRatingMax
+  );
 
   async function refreshData() {
     setIsRefreshing(true);
@@ -245,6 +283,15 @@ export function LibraryPage() {
     chrome.tabs.create({ url }).catch(() => {
       window.open(url, "_blank", "noopener,noreferrer");
     });
+  }
+
+  function clearAdvancedFilters() {
+    setDateFrom("");
+    setDateTo("");
+    setMyRatingMin("");
+    setMyRatingMax("");
+    setOpponentRatingMin("");
+    setOpponentRatingMax("");
   }
 
   function toggleEditingTag(tag: string) {
@@ -383,6 +430,82 @@ export function LibraryPage() {
         </div>
       </section>
 
+      <section className="filter-panel" aria-label="Date and rating filters">
+        <div className="filter-group date-range" aria-label="Saved date range">
+          <Calendar className="filter-icon" size={16} aria-hidden="true" />
+          <span className="filter-title">Saved</span>
+          <label>
+            <span>From</span>
+            <input type="date" value={dateFrom} onChange={(event) => setDateFrom(event.target.value)} />
+          </label>
+          <label>
+            <span>To</span>
+            <input type="date" value={dateTo} onChange={(event) => setDateTo(event.target.value)} />
+          </label>
+        </div>
+        <div className="filter-group rating-range" aria-label="My Elo range">
+          <Gauge className="filter-icon" size={16} aria-hidden="true" />
+          <span className="filter-title">My Elo</span>
+          <label>
+            <span>Min</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min="0"
+              max="4000"
+              value={myRatingMin}
+              onChange={(event) => setMyRatingMin(event.target.value)}
+              placeholder="0"
+            />
+          </label>
+          <span className="range-separator">-</span>
+          <label>
+            <span>Max</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min="0"
+              max="4000"
+              value={myRatingMax}
+              onChange={(event) => setMyRatingMax(event.target.value)}
+              placeholder="4000"
+            />
+          </label>
+        </div>
+        <div className="filter-group rating-range" aria-label="Opponent Elo range">
+          <Gauge className="filter-icon" size={16} aria-hidden="true" />
+          <span className="filter-title">Opp Elo</span>
+          <label>
+            <span>Min</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min="0"
+              max="4000"
+              value={opponentRatingMin}
+              onChange={(event) => setOpponentRatingMin(event.target.value)}
+              placeholder="0"
+            />
+          </label>
+          <span className="range-separator">-</span>
+          <label>
+            <span>Max</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min="0"
+              max="4000"
+              value={opponentRatingMax}
+              onChange={(event) => setOpponentRatingMax(event.target.value)}
+              placeholder="4000"
+            />
+          </label>
+        </div>
+        <button className="clear-filter-button" type="button" disabled={!hasAdvancedFilters} onClick={clearAdvancedFilters}>
+          Clear
+        </button>
+      </section>
+
       <section className="preset-panel" aria-label="Quick tag presets">
         <div className="preset-chips">
           {tagPresets.map((tag) => (
@@ -436,6 +559,7 @@ export function LibraryPage() {
                 : undefined;
             const analysisLabel = analysisUrl ? siteLabel(bookmark.source.site) : "Lichess";
             const isEditing = editing?.id === bookmark.id;
+            const gameMetadataChips = getGameMetadataChips(bookmark);
 
             return (
               <article className="bookmark-card" key={bookmark.id}>
@@ -487,6 +611,15 @@ export function LibraryPage() {
                   ) : (
                     <>
                       <h2>{getBookmarkDisplayTitle(bookmark)}</h2>
+                      {gameMetadataChips.length > 0 ? (
+                        <div className="game-meta-chips" aria-label="Game metadata">
+                          {gameMetadataChips.map((chip) => (
+                            <span key={chip.key} title={chip.title}>
+                              {chip.label}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                       {bookmark.userContent.notes ? <p className="notes-preview">{bookmark.userContent.notes}</p> : null}
 
                       <div className="tag-list card-tags">
@@ -558,6 +691,7 @@ export function LibraryPage() {
                 : undefined;
             const analysisLabel = analysisUrl ? siteLabel(bookmark.source.site) : "Lichess";
             const isEditing = editing?.id === bookmark.id;
+            const gameMetadataChips = getGameMetadataChips(bookmark);
 
             return (
               <article className="bookmark-row" key={bookmark.id}>
@@ -610,6 +744,15 @@ export function LibraryPage() {
                   ) : (
                     <>
                       <h2>{getBookmarkDisplayTitle(bookmark)}</h2>
+                      {gameMetadataChips.length > 0 ? (
+                        <div className="game-meta-chips" aria-label="Game metadata">
+                          {gameMetadataChips.map((chip) => (
+                            <span key={chip.key} title={chip.title}>
+                              {chip.label}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                       {bookmark.userContent.notes ? <p className="notes-preview">{bookmark.userContent.notes}</p> : null}
                       <div className="tag-list row-tags">
                         {bookmark.userContent.tags.length > 0 ? (
@@ -684,6 +827,124 @@ function formatDate(value: string): string {
     hour: "numeric",
     minute: "2-digit"
   }).format(new Date(value));
+}
+
+function stringifySearchValues(values: Array<string | number | undefined>): string {
+  return values
+    .filter((value): value is string | number => value !== undefined && value !== "")
+    .map(String)
+    .join(" ")
+    .toLowerCase();
+}
+
+function isWithinDateRange(createdAt: string, fromDate: string, toDate: string): boolean {
+  const savedAt = new Date(createdAt).getTime();
+  const fromTime = parseLocalDateBoundary(fromDate, "start");
+  const toTime = parseLocalDateBoundary(toDate, "end");
+
+  if (Number.isNaN(savedAt)) {
+    return false;
+  }
+
+  if (fromTime !== undefined && savedAt < fromTime) {
+    return false;
+  }
+
+  if (toTime !== undefined && savedAt > toTime) {
+    return false;
+  }
+
+  return true;
+}
+
+function parseLocalDateBoundary(value: string, boundary: "start" | "end"): number | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) {
+    return undefined;
+  }
+
+  const date =
+    boundary === "start"
+      ? new Date(year, month - 1, day, 0, 0, 0, 0)
+      : new Date(year, month - 1, day, 23, 59, 59, 999);
+
+  return date.getTime();
+}
+
+function isWithinRatingRange(rating: number | undefined, minValue: string, maxValue: string): boolean {
+  const min = parseRatingFilter(minValue);
+  const max = parseRatingFilter(maxValue);
+
+  if (min === undefined && max === undefined) {
+    return true;
+  }
+
+  if (rating === undefined) {
+    return false;
+  }
+
+  if (min !== undefined && rating < min) {
+    return false;
+  }
+
+  if (max !== undefined && rating > max) {
+    return false;
+  }
+
+  return true;
+}
+
+function parseRatingFilter(value: string): number | undefined {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function getGameMetadataChips(bookmark: PositionBookmark): Array<{ key: string; label: string; title?: string }> {
+  const game = bookmark.game;
+  if (!game) {
+    return [];
+  }
+
+  const chips: Array<{ key: string; label: string; title?: string }> = [];
+
+  if (game.timeControl) {
+    chips.push({
+      key: "time",
+      label: game.timeClass && game.timeClass !== "unknown" ? `${game.timeControl} ${game.timeClass}` : game.timeControl,
+      title: "Time control"
+    });
+  }
+
+  if (game.myRating !== undefined || game.opponentRating !== undefined) {
+    if (game.myRating !== undefined) {
+      chips.push({ key: "my-rating", label: `Me ${game.myRating}`, title: "My rating in this game" });
+    }
+
+    if (game.opponentRating !== undefined) {
+      chips.push({ key: "opponent-rating", label: `Opp ${game.opponentRating}`, title: "Opponent rating in this game" });
+    }
+
+    return chips;
+  }
+
+  if (game.whiteRating !== undefined) {
+    chips.push({ key: "white-rating", label: `White ${game.whiteRating}`, title: "White rating" });
+  }
+
+  if (game.blackRating !== undefined) {
+    chips.push({ key: "black-rating", label: `Black ${game.blackRating}`, title: "Black rating" });
+  }
+
+  return chips;
 }
 
 function downloadTextFile(filename: string, contents: string, type: string) {

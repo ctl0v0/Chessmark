@@ -5,7 +5,7 @@ Use this file as the copy/paste source for the first public MVP submission.
 ## Upload Package
 
 - Run `npm run package`.
-- Upload `release/chessmark-0.1.2.zip`.
+- Upload `release/chessmark-0.1.3.zip`.
 - The ZIP must contain `manifest.json` at the root.
 - Load `dist` unpacked in Chrome before submission and test the full save/library/export flow.
 
@@ -22,7 +22,7 @@ Detailed description:
 ```text
 ChessMark helps you save chess positions you want to remember.
 
-When you are playing, reviewing, or studying on Chess.com or Lichess, ChessMark can capture the visible board, save a screenshot, store FEN when available, and let you add notes and tags. Later, you can open the ChessMark Library to search your saved positions, filter by tag, sort by date, copy FEN, reopen the source page, or open the saved position in an analysis board.
+When you are playing, reviewing, or studying on Chess.com or Lichess, ChessMark can capture the visible board, save a screenshot, store FEN when available, save visible game context such as time control and player ratings, and let you add notes and tags. Later, you can open the ChessMark Library to search your saved positions, filter by tag, saved date, or rating metadata, sort by date, copy FEN, reopen the source page, or open the saved position in an analysis board.
 
 ChessMark is local-first and private. There is no account, no backend, no analytics, and no remote upload of your saved positions.
 
@@ -56,7 +56,7 @@ No. ChessMark does not execute remote code. All extension logic is included in t
 
 Data types to disclose:
 
-- Website content: visible chess board screenshots, FEN, board state, and page metadata from supported chess pages.
+- Website content: visible chess board screenshots, FEN, board state, player ratings, time controls, and page metadata from supported chess pages.
 - Web browsing activity or web history: limited to the source URL and page title of supported chess pages that the user chooses to save.
 - User-provided content: notes and tags entered by the user.
 - User activity: saved timestamps, local search/filter/sort state, and library actions if the dashboard asks about activity.
@@ -79,7 +79,7 @@ Privacy policy URL:
 `storage`
 
 ```text
-Stores the user's saved chess position bookmarks, screenshots, FEN, notes, tags, and tag presets locally in Chrome extension storage.
+Stores the user's saved chess position bookmarks, screenshots, FEN, notes, tags, detected game metadata, and tag presets locally in Chrome extension storage.
 ```
 
 `activeTab`
