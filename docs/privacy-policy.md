@@ -12,7 +12,7 @@ When you use ChessMark to save a position, the extension may store the following
 - The board position in FEN when it can be captured or reconstructed.
 - Notes and tags that you enter.
 - The source site, source URL, page title, timestamp, and extension version.
-- Player names, game IDs, or similar page metadata when they are visible and detected on the supported chess site.
+- Player names, game IDs, game time controls, player ratings, or similar page metadata when they are visible and detected on the supported chess site.
 
 ChessMark only runs on the supported chess sites declared in its extension manifest. It does not read cookies, passwords, payment information, authentication tokens, or browser history.
 
@@ -20,7 +20,7 @@ ChessMark only runs on the supported chess sites declared in its extension manif
 
 ChessMark uses this information only to provide its single purpose: saving and managing a private local library of chess positions that you choose to bookmark.
 
-Saved information is used to show your ChessMark library, search and filter saved positions, copy FEN, export saved data, and open saved positions on Chess.com or Lichess analysis boards.
+Saved information is used to show your ChessMark library, search and filter saved positions, filter by saved date or visible rating metadata, copy FEN, export saved data, and open saved positions on Chess.com or Lichess analysis boards.
 
 ## Storage, Sharing, and Transfers
 

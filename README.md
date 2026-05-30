@@ -15,6 +15,7 @@ ChessMark is a bookmarking tool, not a chess engine. It does not provide evaluat
 - Attempts to save FEN when available.
 - Reconstructs FEN from visible board pieces when direct FEN is unavailable.
 - Allows screenshot-only bookmarks when FEN cannot be captured.
+- Saves visible game context such as time control and player ratings when available.
 - Lets users add notes and tags while saving.
 - Provides reusable quick tags for fast categorization.
 - Stores all bookmarks locally in the browser.
@@ -59,7 +60,7 @@ When the user opens the extension popup on a supported site:
 3. If a board is detected, ChessMark shows a small board preview.
 4. The user can add notes and tags.
 5. The user clicks **Save Position**.
-6. ChessMark saves a new bookmark with screenshot, source URL, timestamp, tags, notes, and FEN when available.
+6. ChessMark saves a new bookmark with screenshot, source URL, timestamp, tags, notes, FEN when available, and visible game metadata when detected.
 
 Multiple positions from the same game can be saved. Each capture creates a separate bookmark with its own ID and timestamp.
 
@@ -112,8 +113,11 @@ It includes:
 - `no tags` placeholder when a bookmark has no tags.
 - Source site label.
 - Date saved.
-- Search by title, note, tag, FEN, source URL, source title, and player metadata.
+- Time control and player rating metadata when available.
+- Search by title, note, tag, FEN, source URL, source title, time control, and player metadata.
 - Filter by tag.
+- Filter by saved date range.
+- Filter by saved my/opponent Elo ranges when rating metadata is available.
 - Sort by date:
   - Newest first
   - Oldest first

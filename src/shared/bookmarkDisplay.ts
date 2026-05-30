@@ -1,4 +1,4 @@
-import type { PositionBookmark, Site } from "./types";
+import type { GameMetadata, PositionBookmark, Site } from "./types";
 import { siteLabel } from "./urls";
 
 const GENERIC_TITLE_PATTERNS = [
@@ -11,11 +11,10 @@ const GENERIC_TITLE_PATTERNS = [
 ];
 
 export function buildBookmarkTitle(input: {
-  createdAt: string;
   site: Site;
   notes?: string;
   tags: string[];
-  metadata?: Record<string, string>;
+  metadata?: GameMetadata;
   pageTitle?: string;
   fen?: string;
 }): string {
@@ -40,14 +39,13 @@ export function buildBookmarkTitle(input: {
 
   const side = input.fen?.split(/\s+/)[1];
   const sideText = side === "w" ? "White to move" : side === "b" ? "Black to move" : "Saved position";
-  return `${siteLabel(input.site)} position - ${sideText} - ${formatShortDate(input.createdAt)}`;
+  return `${siteLabel(input.site)} position - ${sideText}`;
 }
 
 export function getBookmarkDisplayTitle(bookmark: PositionBookmark): string {
   return (
     bookmark.userContent.title ||
     buildBookmarkTitle({
-      createdAt: bookmark.createdAt,
       site: bookmark.source.site,
       notes: bookmark.userContent.notes,
       tags: bookmark.userContent.tags,
@@ -67,7 +65,7 @@ function firstUsefulSentence(notes?: string): string | undefined {
   return trimmed.split(/\r?\n|(?<=[.!?])\s+/)[0]?.slice(0, 80);
 }
 
-function buildPlayersTitle(metadata?: Record<string, string>): string | undefined {
+function buildPlayersTitle(metadata?: GameMetadata): string | undefined {
   const white = metadata?.white?.trim();
   const black = metadata?.black?.trim();
 
@@ -93,15 +91,6 @@ function cleanPageTitle(pageTitle?: string): string | undefined {
   }
 
   return title.slice(0, 80);
-}
-
-function formatShortDate(value: string): string {
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit"
-  }).format(new Date(value));
 }
 
 function capitalize(value: string): string {

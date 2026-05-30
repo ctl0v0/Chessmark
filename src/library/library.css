@@ -227,6 +227,82 @@ button:disabled {
   color: var(--brand-ink);
 }
 
+.filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  border: 1px solid var(--brand-line);
+  border-radius: 8px;
+  padding: 4px 7px;
+  background: #ffffff;
+  color: var(--brand-muted);
+}
+
+.filter-icon {
+  flex: 0 0 auto;
+}
+
+.filter-title {
+  flex: 0 0 auto;
+  color: var(--brand-navy-2);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-group label span {
+  color: var(--brand-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter-group input {
+  min-width: 0;
+  height: 26px;
+  border: 1px solid #dbe3ec;
+  border-radius: 6px;
+  padding: 0 6px;
+  outline: none;
+  background: #f8fafc;
+  color: var(--brand-ink);
+  font-size: 12px;
+}
+
+.date-range input {
+  width: 116px;
+}
+
+.rating-range input {
+  width: 54px;
+}
+
+.range-separator {
+  flex: 0 0 auto;
+  color: var(--brand-muted) !important;
+  font-size: 11px;
+  font-weight: 650 !important;
+}
+
+.clear-filter-button {
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
 .preset-panel {
   display: grid;
   grid-template-columns: minmax(220px, 1fr) minmax(160px, 220px) auto;
@@ -526,6 +602,25 @@ button:disabled {
   font-weight: 700;
 }
 
+.game-meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.game-meta-chips span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border: 1px solid #d6dde6;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #f8fafc;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 720;
+}
+
 .fen {
   display: block;
   overflow-wrap: anywhere;
@@ -661,6 +756,28 @@ button:disabled {
   .view-switch {
     flex: 1 1 100%;
     max-width: none;
+    width: 100%;
+  }
+
+  .filter-panel {
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+    padding: 8px 10px;
+  }
+
+  .filter-group label {
+    flex: 1 1 92px;
+  }
+
+  .filter-group input {
+    width: 100%;
+  }
+
+  .clear-filter-button {
     width: 100%;
   }
 

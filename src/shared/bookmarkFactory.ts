@@ -21,7 +21,6 @@ export function createBookmarkFromCapture(input: {
   const parsedFen = input.capture.fen ? parseFen(input.capture.fen) : undefined;
   const site = getSupportedSite(input.tab.url) ?? "chess.com";
   const title = buildBookmarkTitle({
-    createdAt: now,
     site,
     notes: input.draft.notes,
     tags: input.draft.tags,
